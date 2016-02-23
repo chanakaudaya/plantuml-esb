@@ -38,7 +38,7 @@ public enum NoteStyle {
 	NORMAL, HEXAGONAL, BOX;
 
 	public static NoteStyle getNoteStyle(String s) {
-		if (s.equalsIgnoreCase("hnote")) {
+		if (s.equalsIgnoreCase("process_message")){
 			return NoteStyle.HEXAGONAL;
 		} else if (s.equalsIgnoreCase("rnote")) {
 			return NoteStyle.BOX;

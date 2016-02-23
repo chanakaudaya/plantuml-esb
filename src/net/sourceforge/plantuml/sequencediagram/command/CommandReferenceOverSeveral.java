@@ -45,6 +45,7 @@ import net.sourceforge.plantuml.command.regex.RegexResult;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.sequencediagram.Participant;
+import net.sourceforge.plantuml.sequencediagram.ParticipantState;
 import net.sourceforge.plantuml.sequencediagram.Reference;
 import net.sourceforge.plantuml.sequencediagram.SequenceDiagram;
 import net.sourceforge.plantuml.StringUtils;
@@ -57,39 +58,24 @@ public class CommandReferenceOverSeveral extends SingleLineCommand2<SequenceDiag
 
 	private static RegexConcat getConcat() {
 		return new RegexConcat(new RegexLeaf("^"), //
-				new RegexLeaf("REF", "ref(#\\w+)?[%s]+over[%s]+"), //
-				new RegexLeaf("PARTS",
-						"(([\\p{L}0-9_.@]+|[%g][^%g]+[%g])([%s]*,[%s]*([\\p{L}0-9_.@]+|[%g][^%g]+[%g]))*)"), //
-				new RegexLeaf("[%s]*:[%s]*"), //
-				new RegexLeaf("URL", "(?:\\[\\[([^|]*)(?:\\|([^|]*))?\\]\\])?"), //
+				new RegexLeaf("REF", "ref"),
 				new RegexLeaf("TEXT", "(.*)"), //
 				new RegexLeaf("$"));
 	}
 
 	@Override
 	protected CommandExecutionResult executeArg(SequenceDiagram diagram, RegexResult arg) {
-		final HtmlColor backColorElement = diagram.getSkinParam().getIHtmlColorSet().getColorIfValid(arg.get("REF", 0));
-		// final HtmlColor backColorGeneral = HtmlColorSet.getInstance().getColorIfValid(arg.get("REF").get(1));
 
-		final List<String> participants = StringUtils.splitComma(arg.get("PARTS", 0));
-		final String url = arg.get("URL", 0);
-		final String title = arg.get("URL", 1);
 		final String text = StringUtils.trin(arg.get("TEXT", 0));
 
 		final List<Participant> p = new ArrayList<Participant>();
-		for (String s : participants) {
-			p.add(diagram.getOrCreateParticipant(StringUtils.eventuallyRemoveStartingAndEndingDoubleQuote(s)));
-		}
+
+		String participantCode = ParticipantState.getLastParticipant();
+		p.add(diagram.getOrCreateParticipant(participantCode));
 
 		final Display strings = Display.getWithNewlines(text);
 
-		Url u = null;
-		if (url != null) {
-			u = new Url(url, title);
-		}
-
-		final HtmlColor backColorGeneral = null;
-		final Reference ref = new Reference(p, u, strings, backColorGeneral, backColorElement);
+		final Reference ref = new Reference(p, null, strings, null, null);
 		diagram.addReference(ref);
 		return CommandExecutionResult.ok();
 	}

@@ -34,9 +34,12 @@
 package net.sourceforge.plantuml.sequencediagram.command;
 
 import net.sourceforge.plantuml.UrlBuilder;
+import net.sourceforge.plantuml.command.CommandExecutionResult;
 import net.sourceforge.plantuml.command.regex.RegexConcat;
 import net.sourceforge.plantuml.command.regex.RegexLeaf;
+import net.sourceforge.plantuml.command.regex.RegexResult;
 import net.sourceforge.plantuml.graphic.HtmlColorUtils;
+import net.sourceforge.plantuml.sequencediagram.SequenceDiagram;
 
 public class CommandParticipantA extends CommandParticipant {
 
@@ -56,7 +59,14 @@ public class CommandParticipantA extends CommandParticipant {
 				new RegexLeaf("URL", "(" + UrlBuilder.getRegexp() + ")?"), //
 				new RegexLeaf("[%s]*"), //
 				new RegexLeaf("COLOR", "(" + HtmlColorUtils.COLOR_REGEXP + ")?"), //
+				new RegexLeaf("[%s]*:[%s]*"), //
+				new RegexLeaf("NOTE", "(.*)"),
 				new RegexLeaf("$"));
+	}
+
+	@Override
+	protected CommandExecutionResult executeArg(SequenceDiagram diagram, RegexResult arg) {
+		return CommandExecutionResult.ok();
 	}
 
 }

@@ -49,6 +49,7 @@ import net.sourceforge.plantuml.graphic.HtmlColorSet;
 import net.sourceforge.plantuml.sequencediagram.LifeEventType;
 import net.sourceforge.plantuml.sequencediagram.Message;
 import net.sourceforge.plantuml.sequencediagram.Participant;
+import net.sourceforge.plantuml.sequencediagram.ParticipantState;
 import net.sourceforge.plantuml.sequencediagram.SequenceDiagram;
 import net.sourceforge.plantuml.skin.ArrowConfiguration;
 import net.sourceforge.plantuml.skin.ArrowDecoration;
@@ -243,6 +244,7 @@ public class CommandArrow extends SingleLineCommand2<SequenceDiagram> {
 			}
 
 		}
+		ParticipantState.setLastParticipant(p2.getCode());
 		return CommandExecutionResult.ok();
 	}
 

@@ -89,6 +89,7 @@ public class LanguageDescriptor {
 		keyword.add("break");
 		keyword.add("critical");
 		keyword.add("note");
+		keyword.add("process_message");
 		keyword.add("group");
 		keyword.add("left");
 		keyword.add("right");

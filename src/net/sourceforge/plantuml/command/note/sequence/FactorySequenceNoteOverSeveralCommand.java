@@ -56,7 +56,7 @@ public final class FactorySequenceNoteOverSeveralCommand implements SingleMultiF
 		return new RegexConcat( //
 				new RegexLeaf("^"), //
 				new RegexLeaf("VMERGE", "(/)?[%s]*"), //
-				new RegexLeaf("STYLE", "(note|hnote|rnote)[%s]+over[%s]+"), //
+				new RegexLeaf("STYLE", "process_message"), //
 				new RegexLeaf("P1", "([\\p{L}0-9_.@]+|[%g][^%g]+[%g])[%s]*\\,[%s]*"), //
 				new RegexLeaf("P2", "([\\p{L}0-9_.@]+|[%g][^%g]+[%g])[%s]*"), //
 				new RegexLeaf("COLOR", "(" + HtmlColorUtils.COLOR_REGEXP + ")?"), //
@@ -68,7 +68,7 @@ public final class FactorySequenceNoteOverSeveralCommand implements SingleMultiF
 		return new RegexConcat( //
 				new RegexLeaf("^"), //
 				new RegexLeaf("VMERGE", "(/)?[%s]*"), //
-				new RegexLeaf("STYLE", "(note|hnote|rnote)[%s]+over[%s]+"), //
+				new RegexLeaf("STYLE", "process_message"), //
 				new RegexLeaf("P1", "([\\p{L}0-9_.@]+|[%g][^%g]+[%g])[%s]*\\,[%s]*"), //
 				new RegexLeaf("P2", "([\\p{L}0-9_.@]+|[%g][^%g]+[%g])[%s]*"), //
 				new RegexLeaf("COLOR", "(" + HtmlColorUtils.COLOR_REGEXP + ")?"), //
@@ -96,7 +96,7 @@ public final class FactorySequenceNoteOverSeveralCommand implements SingleMultiF
 
 			@Override
 			public String getPatternEnd() {
-				return "(?i)^end[%s]?(note|hnote|rnote)$";
+				return "(?i)^end[%s]?(process_message)$";
 			}
 
 			public CommandExecutionResult executeNow(final SequenceDiagram system, BlocLines lines) {

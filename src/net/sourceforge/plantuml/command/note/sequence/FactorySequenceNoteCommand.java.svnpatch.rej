@@ -1,0 +1,21 @@
+--- src/net/sourceforge/plantuml/command/note/sequence/FactorySequenceNoteCommand.java
++++ src/net/sourceforge/plantuml/command/note/sequence/FactorySequenceNoteCommand.java
+@@ -109,11 +107,15 @@
+ 	}
+ 
+ 	private CommandExecutionResult executeInternal(SequenceDiagram system, RegexResult arg, final List<String> strings) {
+-		final Participant p = system.getOrCreateParticipant(StringUtils
+-				.eventuallyRemoveStartingAndEndingDoubleQuote(arg.get("PARTICIPANT", 0)));
++		String participantCode = ParticipantState.getLastParticipant();
++		if(StringUtils.isEmpty(participantCode)){
++			participantCode = "Anon";
++		}
+ 
+-		final NotePosition position = NotePosition.valueOf(arg.get("POSITION", 0).toUpperCase());
++		final Participant p = system.getOrCreateParticipant(participantCode);
+ 
++		final NotePosition position = NotePosition.OVER;
++
+ 		if (strings.size() > 0) {
+ 			final boolean tryMerge = arg.get("VMERGE", 0) != null;
+ 			final Note note = new Note(p, position, Display.create(strings));

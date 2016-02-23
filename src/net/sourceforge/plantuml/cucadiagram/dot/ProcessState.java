@@ -1,0 +1,100 @@
+/* ========================================================================
+ * PlantUML : a free UML diagram generator
+ * ========================================================================
+ *
+ * (C) Copyright 2009-2014, Arnaud Roques
+ *
+ * Project Info:  http://plantuml.sourceforge.net
+ * 
+ * This file is part of PlantUML.
+ *
+ * PlantUML is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * PlantUML distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
+ *
+ * [Java is a trademark or registered trademark of Sun Microsystems, Inc.
+ * in the United States and other countries.]
+ *
+ * Original Author:  Arnaud Roques
+ * 
+ * Revision $Revision: 10765 $
+ *
+ */
+package net.sourceforge.plantuml.cucadiagram.dot;
+
+import java.io.IOException;
+
+public class ProcessState {
+
+	private final String name;
+	private final IOException cause;
+
+	private ProcessState(String name, IOException cause) {
+		this.name = name;
+		this.cause = cause;
+	}
+
+	@Override
+	public String toString() {
+		if (cause == null) {
+			return name;
+		}
+		return name + " " + cause.toString();
+	}
+
+	private final static ProcessState INIT = new ProcessState("INIT", null);
+	private final static ProcessState RUNNING = new ProcessState("RUNNING", null);
+	private final static ProcessState TERMINATED_OK = new ProcessState("TERMINATED_OK", null);
+	private final static ProcessState TIMEOUT = new ProcessState("TIMEOUT", null);
+
+	// INIT, RUNNING, TERMINATED_OK, TIMEOUT, IO_EXCEPTION1, IO_EXCEPTION2;
+
+	public static ProcessState INIT() {
+		return INIT;
+	}
+
+	public static ProcessState RUNNING() {
+		return RUNNING;
+	}
+
+	public static ProcessState TERMINATED_OK() {
+		return TERMINATED_OK;
+	}
+
+	public static ProcessState TIMEOUT() {
+		return TIMEOUT;
+	}
+
+	public static ProcessState IO_EXCEPTION1(IOException e) {
+		return new ProcessState("IO_EXCEPTION1", e);
+	}
+
+	public static ProcessState IO_EXCEPTION2(IOException e) {
+		return new ProcessState("IO_EXCEPTION2", e);
+	}
+
+	public boolean differs(ProcessState other) {
+		return name.equals(other.name) == false;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		final ProcessState other = (ProcessState) o;
+		return name.equals(other.name);
+	}
+
+	public Throwable getCause() {
+		return cause;
+	}
+}

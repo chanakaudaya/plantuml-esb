@@ -85,6 +85,14 @@ public class PSystemBuilder {
 
 	final public Diagram createPSystem(final List<CharSequence2> strings2) {
 
+		// Remove IntegrationFlow Line
+		for (CharSequence2 line : strings2) {
+			if (line.toString2().startsWith("IntegrationFlow")) {
+				strings2.remove(line);
+				break;
+			}
+		}
+
 		final List<PSystemFactory> factories = getAllFactories();
 
 		final DiagramType type = DiagramType.getTypeFromArobaseStart(strings2.get(0).toString2());

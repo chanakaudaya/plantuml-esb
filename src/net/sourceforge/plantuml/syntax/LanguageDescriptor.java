@@ -82,6 +82,7 @@ public class LanguageDescriptor {
 		keyword.add("newpage");
 		keyword.add("box");
 		keyword.add("alt");
+		keyword.add("condition");
 		keyword.add("else");
 		keyword.add("opt");
 		keyword.add("loop");

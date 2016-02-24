@@ -42,6 +42,7 @@ import net.sourceforge.plantuml.command.regex.RegexConcat;
 import net.sourceforge.plantuml.command.regex.RegexLeaf;
 import net.sourceforge.plantuml.command.regex.RegexResult;
 import net.sourceforge.plantuml.graphic.HtmlColor;
+import net.sourceforge.plantuml.graphic.HtmlColorUtils;
 import net.sourceforge.plantuml.sequencediagram.GroupingType;
 import net.sourceforge.plantuml.sequencediagram.SequenceDiagram;
 import net.sourceforge.plantuml.StringUtils;
@@ -55,7 +56,8 @@ public class CommandGrouping extends SingleLineCommand2<SequenceDiagram> {
 	static RegexConcat getRegexConcat() {
 		return new RegexConcat(//
 				new RegexLeaf("^"), //
-				new RegexLeaf("TYPE", "(opt|alt|loop|par|par2|break|critical|else|end|also|group)"), //
+				new RegexLeaf("TYPE", "(opt|alt|condition|loop|par|par2|break|critical|else|end|also|group)"), //
+				new RegexLeaf("NOTE", "((.*))?"), //
 				new RegexLeaf("COLORS", "((?<!else)(?<!also)(?<!end)#\\w+)?(?:[%s]+(#\\w+))?"), //
 				new RegexLeaf("COMMENT", "(?:[%s]+(.*?))?"), //
 				new RegexLeaf("$"));
@@ -81,6 +83,10 @@ public class CommandGrouping extends SingleLineCommand2<SequenceDiagram> {
 					comment = m.group(2);
 				}
 			}
+		}
+
+		if(type.equalsIgnoreCase("condition")){
+			type += arg.get("NOTE",0);
 		}
 		final boolean result = diagram.grouping(type, comment, groupingType, backColorGeneral, backColorElement);
 		if (result == false) {

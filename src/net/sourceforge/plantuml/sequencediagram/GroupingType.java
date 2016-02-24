@@ -40,6 +40,8 @@ public enum GroupingType {
 			return GroupingType.START;
 		} else if (s.equalsIgnoreCase("alt")) {
 			return GroupingType.START;
+		} else if (s.equalsIgnoreCase("condition")) {
+				return GroupingType.START;
 		} else if (s.equalsIgnoreCase("loop")) {
 			return GroupingType.START;
 		} else if (s.equalsIgnoreCase("par")) {

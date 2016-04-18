@@ -35,6 +35,7 @@ package net.sourceforge.plantuml;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -88,21 +89,24 @@ public class PSystemBuilder {
 	final public synchronized Diagram createPSystem(final List<CharSequence2> strings2) {
 
 		// Remove IntegrationFlow Line
-		for (CharSequence2 line : strings2) {
-			if (line.toString2().startsWith("IntegrationFlow")) {
-				strings2.remove(line);
-				break;
+		for (Iterator<CharSequence2> iterator = strings2.iterator(); iterator.hasNext();)  {
+			CharSequence2 line = iterator.next();
+			if (line.toString2().trim().startsWith("IntegrationFlow")) {
+				iterator.remove();
+			} else if (line.toString2().trim().startsWith("var")) {
+				iterator.remove();
+			} else if (line.toString2().trim().startsWith("$")) {
+				iterator.remove();
 			}
 		}
 
-		// Remove IntegrationFlow Line
-		for (CharSequence2 line : strings2) {
-			if (line.toString2().startsWith("var")) {
-				strings2.remove(line);
-            } else if (line.toString2().startsWith("@enduml")) {
-				break;
-			}
-		}
+//		// Remove variable statement Line
+//		for (CharSequence2 line : strings2) {
+//			if (line.toString2().startsWith("var")) {
+//				strings2.remove(line);
+//				break;
+//            }
+//		}
 
 		final List<PSystemFactory> factories = getAllFactories();
 

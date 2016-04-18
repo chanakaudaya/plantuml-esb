@@ -54,6 +54,10 @@ public class BlocLines implements Iterable<CharSequence> {
 		return Display.create(lines);
 	}
 
+	public Display toDisplayCustom(CharSequence str) {
+		return Display.create(str);
+	}
+
 	public static BlocLines single(CharSequence single) {
 		return new BlocLines(Arrays.asList(single));
 	}

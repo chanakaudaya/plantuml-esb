@@ -35,6 +35,7 @@ package net.sourceforge.plantuml.command.note.sequence;
 
 import java.util.List;
 
+import net.sourceforge.plantuml.CharSequence2;
 import net.sourceforge.plantuml.StringUtils;
 import net.sourceforge.plantuml.command.BlocLines;
 import net.sourceforge.plantuml.command.Command;
@@ -59,12 +60,14 @@ import net.sourceforge.plantuml.sequencediagram.SequenceDiagram;
 public final class FactorySequenceNoteCommand implements SingleMultiFactoryCommand<SequenceDiagram> {
 
 	private static final String NOTES_REGEX = "(log|call|respond|filter|transform|enrich|external)";
+	private static final String NOTES_REGEX2 = "^([\\w]+::[\\w]+\\(\\\"(\\\\.|[^\\\"])*\\\"\\))";
+	private static final String NOTES_REGEX3 = "^([\\w]+::[\\w]+)";
 
 	private RegexConcat getRegexConcatMultiLine() {
 		return new RegexConcat(//
 				new RegexLeaf("^"), //
 				new RegexLeaf("VMERGE", "(/)?[%s]*"), //
-				new RegexLeaf("STYLE", NOTES_REGEX), //
+				new RegexLeaf("STYLE", NOTES_REGEX3), //
 				new RegexLeaf("PARTICIPANT", "(?:of[%s]+)?([\\p{L}0-9_.@]+|[%g][^%g]+[%g])[%s]*"), //
 				new RegexLeaf("COLOR", "(" + HtmlColorUtils.COLOR_REGEXP + ")?"), //
 				new RegexLeaf("$"));
@@ -74,7 +77,7 @@ public final class FactorySequenceNoteCommand implements SingleMultiFactoryComma
 		return new RegexConcat(//
 				new RegexLeaf("^"), //
 				new RegexLeaf("VMERGE", "(/)?[%s]*"), //
-				new RegexLeaf("STYLE", NOTES_REGEX), //
+				new RegexLeaf("STYLE", NOTES_REGEX3), //
 				new RegexLeaf("COLOR", "(" + HtmlColorUtils.COLOR_REGEXP + ")?"), //
 				new RegexLeaf("[%s]*\\([%s]*"), //
 				new RegexLeaf("NOTE", "(.*)\\)"), //
@@ -87,7 +90,7 @@ public final class FactorySequenceNoteCommand implements SingleMultiFactoryComma
 
 			@Override
 			public String getPatternEnd() {
-				return "(?i)^end[%s]?"+ NOTES_REGEX +"$";
+				return "(?i)^end[%s]?"+ NOTES_REGEX3 +"$";
 			}
 
 			public CommandExecutionResult executeNow(final SequenceDiagram system, BlocLines lines) {
@@ -111,8 +114,19 @@ public final class FactorySequenceNoteCommand implements SingleMultiFactoryComma
 	}
 
 	private CommandExecutionResult executeInternal(SequenceDiagram diagram, RegexResult arg, BlocLines strings) {
+		String lineString = arg.get("STYLE").toString();
+		String participantCode = "Anon";
+        String mediatorName = "Anon";
+		CharSequence strName = "Anon";
 
-		String participantCode = ParticipantState.getLastParticipant();
+		if (lineString.contains("::")) {
+            String[] mediatorDefs = lineString.split("::");
+            participantCode = mediatorDefs[0].substring(2);
+            mediatorName = mediatorDefs[1];
+			strName = mediatorName.substring(0, mediatorName.length()-2);
+        } else {
+            participantCode = ParticipantState.getLastParticipant();
+        }
 
 		if(StringUtils.isEmpty(participantCode)){
 			participantCode = "Anon";
@@ -124,7 +138,12 @@ public final class FactorySequenceNoteCommand implements SingleMultiFactoryComma
 
 		if (strings.size() > 0) {
 			final boolean tryMerge = arg.get("VMERGE", 0) != null;
-			final Note note = new Note(p, position, strings.toDisplay());
+			final Note note;
+			if(mediatorName.equalsIgnoreCase("Anon")) {
+				note = new Note(p, position, strings.toDisplay());
+			} else {
+				note = new Note(p, position, strings.toDisplayCustom(strName));
+			}
 			note.setSpecificBackcolor(diagram.getSkinParam().getIHtmlColorSet().getColorIfValid(arg.get("COLOR", 0)));
 			note.setStyle(NoteStyle.HEXAGONAL);
 			diagram.addNote(note, tryMerge);

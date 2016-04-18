@@ -36,12 +36,14 @@ package net.sourceforge.plantuml;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import net.sourceforge.plantuml.acearth.PSystemXearthFactory;
 import net.sourceforge.plantuml.activitydiagram.ActivityDiagramFactory;
 import net.sourceforge.plantuml.activitydiagram3.ActivityDiagramFactory3;
 import net.sourceforge.plantuml.api.PSystemFactory;
 import net.sourceforge.plantuml.classdiagram.ClassDiagramFactory;
+import net.sourceforge.plantuml.command.BlocLines;
 import net.sourceforge.plantuml.compositediagram.CompositeDiagramFactory;
 import net.sourceforge.plantuml.core.Diagram;
 import net.sourceforge.plantuml.core.DiagramType;
@@ -83,12 +85,21 @@ public class PSystemBuilder {
 
 	public static final long startTime = System.currentTimeMillis();
 
-	final public Diagram createPSystem(final List<CharSequence2> strings2) {
+	final public synchronized Diagram createPSystem(final List<CharSequence2> strings2) {
 
 		// Remove IntegrationFlow Line
 		for (CharSequence2 line : strings2) {
 			if (line.toString2().startsWith("IntegrationFlow")) {
 				strings2.remove(line);
+				break;
+			}
+		}
+
+		// Remove IntegrationFlow Line
+		for (CharSequence2 line : strings2) {
+			if (line.toString2().startsWith("var")) {
+				strings2.remove(line);
+            } else if (line.toString2().startsWith("@enduml")) {
 				break;
 			}
 		}

@@ -56,8 +56,7 @@ public class CommandGrouping extends SingleLineCommand2<SequenceDiagram> {
 	static RegexConcat getRegexConcat() {
 		return new RegexConcat(//
 				new RegexLeaf("^"), //
-				new RegexLeaf("TYPE", "(opt|alt|condition|loop|par|par2|break|critical|else|end|also|group)"), //
-				new RegexLeaf("NOTE", "((.*))?"), //
+				new RegexLeaf("TYPE", "(opt|alt|if|service|endpoint|loop|foreach|par|par2|break|critical|else|end|also|group)"), //
 				new RegexLeaf("COLORS", "((?<!else)(?<!also)(?<!end)#\\w+)?(?:[%s]+(#\\w+))?"), //
 				new RegexLeaf("COMMENT", "(?:[%s]+(.*?))?"), //
 				new RegexLeaf("$"));
@@ -85,9 +84,9 @@ public class CommandGrouping extends SingleLineCommand2<SequenceDiagram> {
 			}
 		}
 
-		if(type.equalsIgnoreCase("condition")){
-			type += arg.get("NOTE",0);
-		}
+//		if(type.equalsIgnoreCase("condition")){
+//			type += arg.get("NOTE",0);
+//		}
 		final boolean result = diagram.grouping(type, comment, groupingType, backColorGeneral, backColorElement);
 		if (result == false) {
 			return CommandExecutionResult.error("Cannot create group");

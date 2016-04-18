@@ -83,6 +83,9 @@ public class LanguageDescriptor {
 		keyword.add("box");
 		keyword.add("alt");
 		keyword.add("condition");
+		keyword.add("foreach");
+		keyword.add("service");
+		keyword.add("endpoint");
 		keyword.add("else");
 		keyword.add("opt");
 		keyword.add("loop");

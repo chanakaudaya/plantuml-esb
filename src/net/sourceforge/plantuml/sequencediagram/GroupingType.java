@@ -40,11 +40,17 @@ public enum GroupingType {
 			return GroupingType.START;
 		} else if (s.equalsIgnoreCase("alt")) {
 			return GroupingType.START;
-		} else if (s.equalsIgnoreCase("condition")) {
+		} else if (s.equalsIgnoreCase("if")) {
 				return GroupingType.START;
-		} else if (s.equalsIgnoreCase("loop")) {
+		} else if (s.equalsIgnoreCase("if")) {
 			return GroupingType.START;
-		} else if (s.equalsIgnoreCase("par")) {
+		}else if (s.equalsIgnoreCase("service")) {
+			return GroupingType.START;
+		}else if (s.equalsIgnoreCase("endpoint")) {
+			return GroupingType.START;
+		} else if (s.equalsIgnoreCase("foreach")) {
+			return GroupingType.START;
+		}else if (s.equalsIgnoreCase("par")) {
 			return GroupingType.START;
 		} else if (s.equalsIgnoreCase("par2")) {
 			return GroupingType.START;
